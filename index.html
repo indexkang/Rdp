@@ -1,0 +1,38 @@
+function showResult(rollNo) {
+  Logger.log("Received Roll No: " + rollNo);
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+
+  for (var i = 1; i < data.length; i++) {
+    Logger.log("Checking row: " + i);
+    if (data[i][0] == rollNo) {
+      Logger.log("Match found: " + JSON.stringify(data[i]));
+      return {
+        name: data[i][1],
+        fatherName: data[i][2],
+        bengali: data[i][3],
+        english: data[i][4],
+        math: data[i][5],
+        total: data[i][6],
+        division: data[i][7]
+      };
+    }
+  }
+
+  Logger.log("No match found for roll number: " + rollNo);
+  return null;
+}
+
+function doGet(e) {
+  Logger.log("Received request: " + JSON.stringify(e.parameters));
+  var rollNo = e.parameter.rollNo;
+  var result = showResult(rollNo);
+
+  if (result) {
+    Logger.log("Result: " + JSON.stringify(result));
+    return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+  } else {
+    Logger.log("Result not found for roll number: " + rollNo);
+    return ContentService.createTextOutput("Roll number not found.");
+  }
+}
