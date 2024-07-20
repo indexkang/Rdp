@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>School Result</title>
+</head>
+<body>
+  <h2>Enter Roll Number</h2>
+  <form id="resultForm">
+    Roll Number: <input type="number" id="rollNo" required><br>
+    <button type="button" onclick="getResult()">Submit</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    function getResult() {
+      var rollNo = document.getElementById("rollNo").value;
+      var url = "https://script.google.com/macros/s/AKfycbwsbIDRobw8B5Mak7YwvTPw90yqQTLVekuvW2slEXu8DxDmcObEhPXhWxJ1KsWwAhuu-w/exec?rollNo=" + rollNo;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          var resultDiv = document.getElementById("result");
+          if (data.name) {
+            resultDiv.innerHTML = `
+              <p>Name: ${data.name}</p>
+              <p>Father Name: ${data.fatherName}</p>
+              <p>Bengali(30): ${data.bengali}</p>
+              <p>English(30): ${data.english}</p>
+              <p>Math(40): ${data.math}</p>
+              <p>Total: ${data.total}</p>
+              <p>Division: ${data.division}</p>
+            `;
+          } else {
+            resultDiv.innerHTML = `<p>${data}</p>`;
+          }
+        });
+    }
+  </script>
+</body>
+</html>
